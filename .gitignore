@@ -1,0 +1,49 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+out/
+publish/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+_ReSharper*/
+*.resharper
+
+# VS Code
+.vscode/
+.history/
+
+# NuGet / Packages
+packages/
+*.nupkg
+*.snupkg
+
+# Logs / Test results / Coverage
+[Ll]ogs/
+*.log
+TestResult*/
+[Tt]est[Rr]esults/
+.coverage
+*.coverage
+*.coveragexml
+coverage/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Node (if any frontend is added later)
+node_modules/
+
+# App settings (local only)
+appsettings.Development.json
+appsettings.*.local.json
