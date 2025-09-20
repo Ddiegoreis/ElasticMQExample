@@ -26,25 +26,28 @@ public class SqsConsumerHostedService : BackgroundService
                 var receiveRequest = new ReceiveMessageRequest
                 {
                     QueueUrl = queueUrl,
-                    MaxNumberOfMessages = 5,
-                    WaitTimeSeconds = 5
+                    MaxNumberOfMessages = 10,
+                    WaitTimeSeconds = 20
                 };
 
                 var response = await _sqs.ReceiveMessageAsync(receiveRequest, stoppingToken);
 
-                foreach (var message in response.Messages)
+                if (response.Messages != null && response.Messages.Any())
                 {
-                    _logger.LogInformation("Mensagem recebida: {Body}", message.Body);
+                    foreach (var message in response.Messages)
+                    {
+                        _logger.LogInformation("Received message: {MessageId} - {Body}", message.MessageId, message.Body);
 
-                    // processing logic here
 
-                    await _sqs.DeleteMessageAsync(queueUrl, message.ReceiptHandle, stoppingToken);
-                    _logger.LogInformation("Mensagem apagada da fila. ID: {Id}", message.MessageId);
+
+                        await _sqs.DeleteMessageAsync(queueUrl, message.ReceiptHandle, stoppingToken);
+                        _logger.LogInformation("Deleted message: {MessageId}", message.MessageId);
+                    }
                 }
             }
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
             {
-                // shutdown requested
+                break;
             }
             catch (Exception ex)
             {
@@ -52,5 +55,7 @@ public class SqsConsumerHostedService : BackgroundService
                 await Task.Delay(TimeSpan.FromSeconds(2), stoppingToken);
             }
         }
+
+        _logger.LogInformation("SQS consumer stopping for {QueueUrl}", queueUrl);
     }
 }
