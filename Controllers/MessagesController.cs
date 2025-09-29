@@ -1,20 +1,23 @@
 using Microsoft.AspNetCore.Mvc;
 
-[ApiController]
-[Route("messages")]
-public class MessagesController : ControllerBase
+namespace ElasticMQExample.Controllers
 {
-    private readonly IMessageProducer _producer;
-
-    public MessagesController(IMessageProducer producer)
+    [ApiController]
+    [Route("messages")]
+    public class MessagesController : ControllerBase
     {
-        _producer = producer;
-    }
+        private readonly IMessageProducer _producer;
 
-    [HttpPost]
-    public async Task<IActionResult> Send([FromBody] SendMessageRequestDto dto, CancellationToken ct)
-    {
-        var messageId = await _producer.SendAsync(dto.Message, ct);
-        return Ok(new { MessageId = messageId });
+        public MessagesController(IMessageProducer producer)
+        {
+            _producer = producer;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Send([FromBody] SendMessageRequestDto dto, CancellationToken ct)
+        {
+            var messageId = await _producer.SendAsync(dto.Message, ct);
+            return Ok(new { MessageId = messageId });
+        }
     }
 }
